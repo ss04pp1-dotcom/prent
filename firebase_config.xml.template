@@ -1,8 +1,0 @@
-<!-- Copy this file to app-parent/src/main/res/values/firebase_config.xml and app-child/src/main/res/values/firebase_config.xml and fill in your values from google-services.json -->
-<resources>
-    <string name="firebase_project_id">YOUR_PROJECT_ID</string>
-    <string name="firebase_application_id">YOUR_APP_ID</string>
-    <string name="firebase_api_key">YOUR_API_KEY</string>
-    <string name="firebase_sender_id">YOUR_SENDER_ID</string>
-    <string name="firebase_storage_bucket">YOUR_STORAGE_BUCKET</string>
-</resources>
