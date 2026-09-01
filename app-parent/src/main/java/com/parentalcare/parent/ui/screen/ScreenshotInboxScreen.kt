@@ -98,7 +98,7 @@ fun ScreenshotInboxScreen(
             contentPadding = PaddingValues(bottom = 80.dp),
         ) {
             items(shown) { item ->
-                val timeStr = timeFormat.format(Date(item.capturedAt))
+                val timeStr = timeFormat.format(Date(item.capturedAt ?: 0L))
                 val bmp = item.thumbnailBase64?.let {
                     val bytes = Base64.decode(it, Base64.DEFAULT)
                     BitmapFactory.decodeByteArray(bytes, 0, bytes.size)

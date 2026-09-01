@@ -72,7 +72,7 @@ class ChildPairingViewModel @Inject constructor(
             }
             
             val device = (redeemResult as com.parentalcare.core.common.result.Result.Success<DeviceDoc>).data
-            childPreferences.savePairingData(device.deviceId, device.familyId, token.parentPublicKey)
+            childPreferences.savePairingData(device.deviceId, device.familyId, token.parentEncryptionPublicKey ?: token.parentPublicKey ?: "")
             _pairingState.value = PairingState.Success(device)
         }
     }

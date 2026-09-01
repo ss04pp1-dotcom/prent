@@ -57,13 +57,13 @@ class DashboardViewModel @Inject constructor(
 
                 launch {
                     screenshotRepository.listenForFamilyScreenshots(family.familyId).collectLatest { shots ->
-                        _todayScreenshots.value = shots.count { shot: com.parentalcare.core.data.model.ScreenshotDoc -> shot.capturedAt >= startOfToday }
+                        _todayScreenshots.value = shots.count { shot: com.parentalcare.core.data.model.ScreenshotDoc -> (shot.capturedAt ?: 0L) >= startOfToday }
                     }
                 }
                 
                 launch {
                     requestRepository.listenForParentRequests(family.familyId).collectLatest { reqs ->
-                        _todayRequests.value = reqs.count { it.createdAt >= startOfToday }
+                        _todayRequests.value = reqs.count { (it.createdAt ?: 0L) >= startOfToday }
                     }
                 }
 

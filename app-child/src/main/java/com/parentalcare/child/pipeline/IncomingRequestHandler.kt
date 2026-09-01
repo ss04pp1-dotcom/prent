@@ -55,7 +55,7 @@ class IncomingRequestHandler @Inject constructor(
             familyId = req.familyId,
             parentUserId = req.parentUserId,
             childDeviceId = req.childDeviceId,
-            createdAt = req.createdAt,
+            createdAt = req.createdAt ?: System.currentTimeMillis(),
             expiresAt = req.expiresAt,
             nonce = req.nonce,
             status = req.status,

@@ -32,7 +32,7 @@ fun RequestScreen(
     val activeReq by viewModel.activeRequest.collectAsState()
     activeReq?.let { req ->
         val timeFormat = SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
-        val timeString = timeFormat.format(Date(req.createdAt))
+        val timeString = timeFormat.format(Date(req.createdAt ?: System.currentTimeMillis()))
 
         Column(
             modifier = Modifier
