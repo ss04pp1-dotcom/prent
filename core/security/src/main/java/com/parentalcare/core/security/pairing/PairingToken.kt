@@ -15,7 +15,9 @@ data class PairingToken(
     @SerialName("parent_email") val parentEmail: String,
     @SerialName("parent_public_key") val parentPublicKey: String? = null,
     @SerialName("parent_encryption_public_key") val parentEncryptionPublicKey: String? = null,
+    @Serializable(with = com.parentalcare.core.security.model.SupabaseTimestampSerializer::class)
     @SerialName("created_at") val createdAt: Long,
+    @Serializable(with = com.parentalcare.core.security.model.SupabaseTimestampSerializer::class)
     @SerialName("expires_at") val expiresAt: Long,
     @SerialName("nonce") val nonce: String,
     @SerialName("is_consumed") val isConsumed: Boolean = false,

@@ -21,11 +21,14 @@ data class ScreenshotRequestDoc(
     @SerialName("family_id") val familyId: String,
     @SerialName("parent_user_id") val parentUserId: String,
     @SerialName("child_device_id") val childDeviceId: String,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("created_at") val createdAt: Long? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("expires_at") val expiresAt: Long,
     @SerialName("nonce") val nonce: String,
     @SerialName("status") val status: String = "REQUESTED",
     @SerialName("delay_seconds") val delaySeconds: Int = 0,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("completed_at") val completedAt: Long? = null,
     @SerialName("failure_reason") val failureReason: String? = null,
     @SerialName("cancellation_reason") val cancellationReason: String? = null,
@@ -63,10 +66,15 @@ data class ScreenshotDoc(
     @SerialName("width_px") val widthPx: Int = 0,
     @SerialName("height_px") val heightPx: Int = 0,
     @SerialName("size_bytes") val sizeBytes: Long = 0L,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("captured_at") val capturedAt: Long? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("delivered_at") val deliveredAt: Long? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("viewed_at") val viewedAt: Long? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("deleted_at") val deletedAt: Long? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("retention_expires_at") val retentionExpiresAt: Long,
     @SerialName("is_unread") val isUnread: Boolean = true,
     @SerialName("encrypted_payload_base64") val encryptedPayloadBase64: String? = null,

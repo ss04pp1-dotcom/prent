@@ -15,7 +15,9 @@ data class UserDoc(
     @SerialName("role") val role: String, // PARENT or CHILD
     @SerialName("family_id") val familyId: String? = null,
     @SerialName("photo_url") val photoUrl: String? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("created_at") val createdAt: Long? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("updated_at") val updatedAt: Long? = null,
     @SerialName("is_email_verified") val isEmailVerified: Boolean = false,
 )
@@ -29,7 +31,9 @@ data class FamilyDoc(
     @SerialName("id") val familyId: String,
     @SerialName("name") val name: String,
     @SerialName("parent_user_id") val parentUserId: String,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("created_at") val createdAt: Long? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("updated_at") val updatedAt: Long? = null,
     @SerialName("retention_hours") val retentionHours: Int = 24,
     @SerialName("biometric_lock_enabled") val biometricLockEnabled: Boolean = false,
@@ -46,6 +50,7 @@ data class MemberDoc(
     @SerialName("family_id") val familyId: String,
     @SerialName("role") val role: String, // PARENT or CHILD
     @SerialName("display_name") val displayName: String,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("added_at") val addedAt: Long? = null,
 )
 
@@ -64,11 +69,14 @@ data class DeviceDoc(
     @SerialName("android_version") val androidVersion: String,
     @SerialName("fcm_token") val fcmToken: String? = null,
     @SerialName("is_online") val isOnline: Boolean = false,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("last_seen_at") val lastSeenAt: Long? = null,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("paired_at") val pairedAt: Long? = null,
     @SerialName("monitoring_active") val monitoringActive: Boolean = true,
     @SerialName("screenshot_count") val screenshotCount: Int = 0,
     @SerialName("request_count") val requestCount: Int = 0,
+    @Serializable(with = SupabaseTimestampSerializer::class)
     @SerialName("last_screenshot_at") val lastScreenshotAt: Long? = null,
     @SerialName("retention_hours") val retentionHours: Int = 24,
 )
