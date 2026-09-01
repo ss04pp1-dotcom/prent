@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Parental Care</string>
+    <string name="app_name_internal">Parental Care — Child</string>
+
+    <!-- Notification channels -->
+    <string name="channel_monitoring_name">Monitoring Status</string>
+    <string name="channel_monitoring_desc">Persistent indicator while Parental Care monitoring is active.</string>
+    <string name="channel_request_name">Screenshot Requests</string>
+    <string name="channel_request_desc">Notifies you when your parent requests a screenshot.</string>
+    <string name="channel_received_name">General</string>
+    <string name="channel_received_desc">General low-priority notifications.</string>
+
+    <!-- Monitoring foreground service notification -->
+    <string name="monitoring_notification_title">Parental Care</string>
+    <string name="monitoring_notification_text">Screen capture service active</string>
+    <string name="monitoring_notification_channel_id">channel_monitoring</string>
+
+    <!-- Capture foreground service notification -->
+    <string name="capture_notification_title">Parental Care</string>
+    <string name="capture_notification_text">Capturing screenshot…</string>
+
+    <!-- Incoming FCM notification (parent request) -->
+    <string name="notification_request_title">Screenshot request from parent</string>
+    <string name="notification_request_body">Tap to take a screenshot.</string>
+
+    <!-- Welcome screen -->
+    <string name="welcome_title">Parental Care</string>
+    <string name="welcome_subheader">This app helps your parent keep you safe and healthy online.</string>
+    <string name="welcome_bullet_1">Screenshots may be taken on request.</string>
+    <string name="welcome_bullet_2">You will be notified when it happens.</string>
+    <string name="welcome_bullet_3">Your privacy is important.</string>
+    <string name="welcome_cta">Get Started</string>
+    <string name="welcome_footer">By continuing, you agree to our Privacy Policy &amp; Terms</string>
+
+    <!-- Permission info -->
+    <string name="perm_info_header">What we need</string>
+    <string name="perm_info_subheader">The following permissions are required for the app to work properly.</string>
+    <string name="perm_capture_title">Screen Capture</string>
+    <string name="perm_capture_desc">To take screenshots</string>
+    <string name="perm_storage_title">Storage Access</string>
+    <string name="perm_storage_desc">To save screenshots temporarily</string>
+    <string name="perm_notif_title">Notifications</string>
+    <string name="perm_notif_desc">To show capture status</string>
+    <string name="perm_fg_title">Foreground Service</string>
+    <string name="perm_fg_desc">To keep monitoring service running</string>
+    <string name="perm_cta">Continue</string>
+    <string name="perm_footer">We never collect your personal conversations or keystrokes.</string>
+
+    <!-- Pairing -->
+    <string name="pair_header">Connect to Parent</string>
+    <string name="pair_subheader">Scan the QR code from your parent\'s app.</string>
+    <string name="pair_or_code">Or enter pairing code</string>
+    <string name="pair_help">Need help?</string>
+
+    <!-- Pairing success -->
+    <string name="pair_success_header">Paired Successfully!</string>
+    <string name="pair_success_subheader">Your device is now connected to your parent.</string>
+    <string name="pair_success_done">Done</string>
+    <string name="pair_success_go_home">Go to Home</string>
+
+    <!-- Monitoring active -->
+    <string name="monitoring_active_title">Monitoring</string>
+    <string name="monitoring_active_status">Monitoring is Active</string>
+    <string name="monitoring_active_subtext">Your parent can request screenshots from this device.</string>
+    <string name="monitoring_active_parent_label">Parent</string>
+    <string name="monitoring_active_connection">Connected</string>
+    <string name="monitoring_active_stop">Stop Monitoring</string>
+    <string name="monitoring_stat_last">Last Screenshot</string>
+    <string name="monitoring_stat_total">Total Requests</string>
+
+    <!-- Incoming request -->
+    <string name="request_header">Request from Parent</string>
+    <string name="request_subtitle">%1$s has requested a screenshot.</string>
+    <string name="request_note">This screenshot will be shared with your parent.</string>
+    <string name="request_take">Take Screenshot</string>
+    <string name="request_cancel">Cancel</string>
+
+    <!-- Capturing -->
+    <string name="capture_header">Capturing Screen</string>
+    <string name="capture_status">Capturing your screen…</string>
+    <string name="capture_subtext">Please wait while we take the screenshot.</string>
+    <string name="capture_warn">You will be notified once the screenshot is sent.</string>
+
+    <!-- Screenshot sent -->
+    <string name="sent_header">Screenshot Sent</string>
+    <string name="sent_status">Screenshot Sent</string>
+    <string name="sent_subtext">The screenshot has been sent to your parent successfully.</string>
+    <string name="sent_ok">OK</string>
+
+    <!-- Request history -->
+    <string name="history_today">Today</string>
+    <string name="history_yesterday">Yesterday</string>
+    <string name="history_sent">Screenshot sent</string>
+    <string name="history_cancelled">Cancelled</string>
+    <string name="history_tab_all">All</string>
+    <string name="history_tab_completed">Completed</string>
+    <string name="history_tab_cancelled">Cancelled</string>
+    <string name="history_footer">All times are shown in your local time.</string>
+
+    <!-- Settings -->
+    <string name="settings_header">Settings</string>
+    <string name="settings_permissions">Permissions</string>
+    <string name="settings_general">General</string>
+    <string name="settings_other">Other</string>
+    <string name="settings_capture">Screen Capture</string>
+    <string name="settings_notif">Notifications</string>
+    <string name="settings_fg">Foreground Service</string>
+    <string name="settings_storage">Storage Access</string>
+    <string name="settings_start_on_boot">Start on Boot</string>
+    <string name="settings_persistent_notif">Show Persistent Notification</string>
+    <string name="settings_clear_data">Clear Data</string>
+    <string name="settings_about">About</string>
+    <string name="settings_privacy">Privacy Policy</string>
+    <string name="settings_terms">Terms</string>
+
+    <!-- About -->
+    <string name="about_header">About</string>
+    <string name="about_version">Version 1.0.0</string>
+    <string name="about_how">How it works</string>
+    <string name="about_copyright">© 2024 Parental Care. All rights reserved.</string>
+
+    <!-- Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_requests">Requests</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Errors -->
+    <string name="err_offline">No internet connection.</string>
+    <string name="err_auth_expired">Authentication expired. Please sign in again.</string>
+    <string name="err_unpaired">This device is no longer paired with a parent account.</string>
+    <string name="err_capture_failed">Could not capture the screenshot. Please grant screen capture permission again.</string>
+    <string name="err_upload_failed">Could not upload the screenshot. Please check your connection.</string>
+    <string name="err_request_expired">This request has expired.</string>
+    <string name="accessibility_service_description">Parental Care needs this service to take silent screenshots for monitoring.</string>
+</resources>

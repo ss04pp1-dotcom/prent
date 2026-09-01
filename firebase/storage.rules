@@ -1,0 +1,57 @@
+rules_version = '2';
+
+// ============================================================================
+// Parental Care — Firebase Storage Security Rules
+// ----------------------------------------------------------------------------
+// All Storage paths are ownership-bound:
+//   families/{familyId}/screenshots/{childDeviceId}/{screenshotId}.enc
+//
+// Authentication is required for every operation.
+// Public download URLs are FORBIDDEN — clients must use signed URLs OR
+// the Firebase SDK's authenticated access.
+//
+// Cross-family access is rejected by the path-bound check below.
+// ============================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Only authenticated Firebase users may touch storage.
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Parent owns family iff they are the parentUserId on the families doc.
+    // NOTE: this requires Firestore rules + storage to share the same project.
+    function isParentOf(familyId) {
+      return isSignedIn()
+        && firestore.get(/databases/(default)/documents/families/$(familyId)).data.parentUserId == request.auth.uid;
+    }
+
+    function isChildOf(familyId, deviceId) {
+      return isSignedIn()
+        && firestore.get(/databases/(default)/documents/families/$(familyId)/devices/$(deviceId)).data.ownerMemberId == request.auth.uid;
+    }
+
+    // ---- Encrypted screenshot blobs ----
+    // Path pattern: families/{familyId}/screenshots/{childDeviceId}/{screenshotId}.enc
+    match /families/{familyId}/screenshots/{childDeviceId}/{screenshotId}.enc {
+
+      // Child (owner of the device) can WRITE screenshots.
+      allow write: if isChildOf(familyId, childDeviceId)
+                   && request.resource.size < 2 * 1024 * 1024 // 2MB hard cap
+                   && request.resource.contentType.matches('application/octet-stream')
+                   && screenshotId.matches('^shot_[A-Za-z0-9_-]+$');
+
+      // Parent can READ screenshots in their family.
+      // Parent can DELETE screenshots in their family.
+      allow read: if isParentOf(familyId);
+      allow delete: if isParentOf(familyId);
+    }
+
+    // Everything else is denied by default.
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

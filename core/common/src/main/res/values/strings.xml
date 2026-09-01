@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Supabase configuration -->
+    <string name="supabase_url">https://rkajicckdikqdorneqme.supabase.co</string>
+    <string name="supabase_anon_key">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrYWppY2NrZGlrcWRvcm5lcW1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxMzYzNjIsImV4cCI6MjEwMzcxMjM2Mn0.-jhkpUArF8hsAqNvMJv43upy8psuLvTXRcpQlRHDDbc</string>
+</resources>

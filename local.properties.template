@@ -1,0 +1,9 @@
+## Copy this file to `local.properties` and adjust the path.
+## local.properties is NOT committed — it is git-ignored.
+##
+## Points to the Android SDK installation on your dev machine.
+## On macOS: ~/Library/Android/sdk
+## On Linux: /home/<user>/Android/Sdk
+## On Windows: C\:\\Users\\<user>\\AppData\\Local\\Android\\Sdk
+
+sdk.dir=/home/your-user/Android/Sdk

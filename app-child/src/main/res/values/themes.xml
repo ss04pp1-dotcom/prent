@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme overridden by Compose theme in MainActivity.
+         We declare XML theme to ensure proper splash rendering before
+         Compose takes over. -->
+    <style name="Theme.ParentalCare.Child" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">#F5F6FA</item>
+        <item name="android:windowBackground">#F5F6FA</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.ParentalCare.Child.Splash" parent="Theme.ParentalCare.Child">
+        <item name="android:windowBackground">#F5F6FA</item>
+    </style>
+</resources>

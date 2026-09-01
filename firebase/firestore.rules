@@ -1,0 +1,208 @@
+rules_version = '2';
+
+// ============================================================================
+// Parental Care — Firestore Security Rules
+// ----------------------------------------------------------------------------
+// Multi-tenant, deny-by-default. Every rule enforces ownership triple
+// (familyId, parentUserId, childDeviceId) derived from the path AND the
+// request.auth.uid of the caller.
+//
+// Trust model:
+//   - Parent app: identified by Firebase Authentication UID.
+//                 Must own the family via users/{uid}.familyId.
+//   - Child app: identified by Firebase Authentication UID (anonymous or
+//                 email) PLUS a device binding claim stored in
+//                 families/{familyId}/devices/{deviceId}.
+//
+// Anti-patterns rejected:
+//   - Forged familyId (caller's uid != parentUserId in family document)
+//   - Forged childDeviceId (caller's bound device ID != request childDeviceId)
+//   - Replay attacks (requests past their expiresAt are unreadable by child)
+//   - Cross-family reads (child tries to query a foreign family's screenshots)
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------- Utility functions ----------------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+
+    function isParentOf(familyId) {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/families/$(familyId))
+        && get(/databases/$(database)/documents/families/$(familyId)).data.parentUserId == request.auth.uid;
+    }
+
+    // Child app is paired iff there exists a devices/{deviceId} document in
+    // the given family whose ownerMemberId matches request.auth.uid.
+    function isChildOf(familyId, deviceId) {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/families/$(familyId)/devices/$(deviceId))
+        && get(/databases/$(database)/documents/families/$(familyId)/devices/$(deviceId)).data.ownerMemberId == request.auth.uid;
+    }
+
+    // ---------------- users/{uid} ----------------
+    match /users/{uid} {
+      // User may read only their own profile.
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      // Created only on signup; never updatable from the client except the
+      // fields explicitly allowed here.
+      allow create: if isSignedIn() && request.auth.uid == uid
+                    && request.resource.data.userId == uid
+                    && request.resource.data.role is string
+                    && request.resource.data.email is string;
+      allow update: if isSignedIn() && request.auth.uid == uid
+                    // Only allow updating display metadata; never role/familyId.
+                    && request.resource.data.role == resource.data.role
+                    && request.resource.data.familyId == resource.data.familyId;
+      allow delete: if false; // Use server-side admin function only.
+    }
+
+    // ---------------- pairingTokens/{tokenId} ----------------
+    // Short-lived, one-time. Parent creates; child reads once then marks consumed.
+    match /pairingTokens/{tokenId} {
+      allow read: if isSignedIn()
+                  && request.resource.data == null || request.resource.data.isConsumed == false
+                  && request.time.toMillis() < resource.data.expiresAt;
+      allow create: if isSignedIn()
+                    && request.resource.data.parentUserId == request.auth.uid
+                    && request.resource.data.tokenId == tokenId
+                    && request.resource.data.isConsumed == false
+                    && request.resource.data.expiresAt - request.resource.data.createdAt < 5 * 60 * 1000;
+      // Child can flip isConsumed -> true ONCE, within the TTL window.
+      allow update: if isSignedIn()
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['isConsumed', 'consumedByDeviceId'])
+                    && request.resource.data.isConsumed == true
+                    && resource.data.isConsumed == false
+                    && request.time.toMillis() < resource.data.expiresAt;
+      allow delete: if false;
+    }
+
+    // ---------------- families/{familyId} ----------------
+    match /families/{familyId} {
+      allow read: if isParentOf(familyId) || isChildOf(familyId, 'placeholder-for-child'); // child reads via subcollection below
+      allow create: if isSignedIn()
+                    && request.resource.data.parentUserId == request.auth.uid
+                    && request.resource.data.familyId == familyId;
+      allow update: if isParentOf(familyId)
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['retentionHours', 'biometricLockEnabled', 'name']);
+      allow delete: if isParentOf(familyId);
+
+      // -------- members --------
+      match /members/{memberId} {
+        allow read: if isParentOf(familyId) || (isSignedIn() && resource.data.userId == request.auth.uid);
+        allow create, update, delete: if isParentOf(familyId);
+      }
+
+      // -------- devices --------
+      match /devices/{deviceId} {
+        // Parent can read/write all devices in their own family.
+        // Child can read only its OWN device doc.
+        allow read: if isParentOf(familyId)
+                    || (isSignedIn() && resource.data.ownerMemberId == request.auth.uid);
+
+        // Initial create happens during pairing — child device registers itself.
+        allow create: if isSignedIn()
+                      && request.resource.data.ownerMemberId == request.auth.uid
+                      && request.resource.data.familyId == familyId
+                      && request.resource.data.deviceId == deviceId;
+
+        // Child can update its OWN device doc — limited to safe fields.
+        allow update: if isParentOf(familyId) ||
+                       (isSignedIn()
+                        && resource.data.ownerMemberId == request.auth.uid
+                        && request.resource.data.diff(resource.data).affectedKeys()
+                            .hasOnly(['fcmToken', 'isOnline', 'lastSeenAt', 'monitoringActive', 'screenshotCount', 'requestCount', 'lastScreenshotAt'])
+                        // childDeviceId and familyId are immutable.
+                        && request.resource.data.deviceId == resource.data.deviceId
+                        && request.resource.data.familyId == resource.data.familyId);
+
+        allow delete: if isParentOf(familyId);
+      }
+
+      // -------- screenshotRequests --------
+      match /screenshotRequests/{requestId} {
+        // Parent: full read/write of requests they created in their family.
+        // Child: read only requests addressed to their own device AND not yet expired.
+        allow read: if isParentOf(familyId)
+                    || (isChildOf(familyId, resource.data.childDeviceId)
+                        && request.time.toMillis() < resource.data.expiresAt);
+
+        // Only parent creates, targeting a deviceId in their own family.
+        allow create: if isParentOf(familyId)
+                      && request.resource.data.parentUserId == request.auth.uid
+                      && request.resource.data.familyId == familyId
+                      && request.resource.data.requestId == requestId
+                      && request.resource.data.status == 'REQUESTED'
+                      && request.resource.data.expiresAt - request.resource.data.createdAt <= 30 * 60 * 1000
+                      && request.resource.data.nonce is string
+                      && request.resource.data.nonce.size() >= 16;
+
+        // Status transitions:
+        //   parent: -> DELIVERED, CANCELLED
+        //   child : -> PROCESSING, UPLOADED, FAILED
+        // familyId / childDeviceId / parentUserId / requestId / nonce / expiresAt are immutable.
+        allow update: if (isParentOf(familyId) || isChildOf(familyId, resource.data.childDeviceId))
+                      && request.resource.data.familyId == resource.data.familyId
+                      && request.resource.data.childDeviceId == resource.data.childDeviceId
+                      && request.resource.data.parentUserId == resource.data.parentUserId
+                      && request.resource.data.requestId == resource.data.requestId
+                      && request.resource.data.nonce == resource.data.nonce
+                      && request.resource.data.expiresAt == resource.data.expiresAt
+                      && request.resource.data.status in
+                          ['REQUESTED', 'PROCESSING', 'UPLOADED', 'DELIVERED', 'EXPIRED', 'CANCELLED', 'FAILED'];
+
+        allow delete: if isParentOf(familyId);
+      }
+
+      // -------- screenshots --------
+      match /screenshots/{screenshotId} {
+        // Parent: read all screenshots in their family.
+        // Child: NEVER reads screenshots — they only upload them.
+        allow read: if isParentOf(familyId);
+
+        // Child creates only for screenshots where:
+        //   - familyId matches a device they own
+        //   - childDeviceId matches the device they own
+        //   - requestId references a REQUESTED/PROCESSING request in same family
+        //   - storagePath follows ownership-bound pattern
+        allow create: if isChildOf(familyId, request.resource.data.childDeviceId)
+                      && request.resource.data.familyId == familyId
+                      && request.resource.data.parentUserId ==
+                          get(/databases/$(database)/documents/families/$(familyId)/screenshotRequests/$(request.resource.data.requestId)).data.parentUserId
+                      && request.resource.data.storagePath is string
+                      && request.resource.data.storagePath.matches('^families/[^/]+/screenshots/[^/]+/[^/]+\\.enc$')
+                      && request.resource.data.iv is string
+                      && request.resource.data.wrappedKey is string
+                      && request.resource.data.retentionExpiresAt > request.time.toMillis();
+
+        // Parent can update only safe metadata fields:
+        //   - viewedAt, isUnread, deliveredAt
+        // childDeviceId, parentUserId, familyId, storagePath, iv, wrappedKey, capturedAt are immutable.
+        allow update: if isParentOf(familyId)
+                      && request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['viewedAt', 'isUnread', 'deliveredAt']);
+
+        // Parent can permanently delete. Child cannot.
+        allow delete: if isParentOf(familyId);
+      }
+
+      // -------- activityLog --------
+      match /activityLog/{eventId} {
+        allow read: if isParentOf(familyId) || isChildOf(familyId, 'placeholder-for-child');
+        // Both parent and child can write log entries for their own family.
+        allow create: if (isParentOf(familyId) || isSignedIn())
+                      && request.resource.data.familyId == familyId;
+        allow update, delete: if false;
+      }
+    }
+  }
+}

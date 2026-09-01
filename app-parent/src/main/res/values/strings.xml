@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Parental Care</string>
+
+    <!-- Channels -->
+    <string name="channel_screenshot_received_name">Screenshots Received</string>
+    <string name="channel_screenshot_received_desc">Notifies you when a new screenshot is delivered.</string>
+    <string name="channel_request_name">Screenshot Requests</string>
+
+    <!-- Login -->
+    <string name="login_title">Parental Care</string>
+    <string name="login_subtitle">Stay connected. Keep them safe.</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_cta">Login</string>
+    <string name="login_forgot">Forgot password?</string>
+    <string name="login_or">or continue with:</string>
+    <string name="login_signup">Don\'t have an account? Sign up</string>
+
+    <!-- Dashboard -->
+    <string name="dash_title">Dashboard</string>
+    <string name="dash_my_children">My Children</string>
+    <string name="dash_active">2 Active</string>
+    <string name="dash_stat_today">Today\'s Screenshots</string>
+    <string name="dash_stat_requests">Today\'s Requests</string>
+    <string name="dash_activity_log">Activity Log</string>
+    <string name="dash_settings">Settings</string>
+    <string name="dash_view">View</string>
+
+    <!-- Tabs -->
+    <string name="tab_dashboard">Dashboard</string>
+    <string name="tab_children">Children</string>
+    <string name="tab_requests">Requests</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Inbox -->
+    <string name="inbox_title">Inbox</string>
+    <string name="inbox_all">All</string>
+    <string name="inbox_unread">Unread</string>
+    <string name="inbox_today">Today</string>
+    <string name="inbox_yesterday">Yesterday</string>
+
+    <!-- Viewer -->
+    <string name="viewer_delete">Delete Permanently</string>
+    <string name="viewer_download">Download</string>
+
+    <!-- Delete confirmation -->
+    <string name="delete_title">Delete Permanently?</string>
+    <string name="delete_body">This screenshot will be deleted permanently from all locations. This action cannot be undone.</string>
+    <string name="delete_cancel">Cancel</string>
+    <string name="delete_confirm">Delete Permanently</string>
+
+    <!-- Request -->
+    <string name="request_title">Request Screenshot</string>
+    <string name="request_helper">A request will be sent to %1$s\'s phone to take a screenshot.</string>
+    <string name="request_now">Take screenshot now</string>
+    <string name="request_1">After 1 minute</string>
+    <string name="request_5">After 5 minutes</string>
+    <string name="request_15">After 15 minutes</string>
+    <string name="request_custom">Custom time</string>
+    <string name="request_send">Send Request</string>
+
+    <!-- Calendar -->
+    <string name="cal_history">History</string>
+    <string name="cal_calendar">Calendar</string>
+    <string name="cal_summary">Aug 25, 2024 — 5 screenshots</string>
+
+    <!-- Settings -->
+    <string name="settings_screenshots">Screenshot Settings</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_privacy">Privacy &amp; Security</string>
+    <string name="settings_data">Data Management</string>
+    <string name="settings_help">Help &amp; Support</string>
+    <string name="settings_about">About Parental Care</string>
+    <string name="settings_logout">Logout</string>
+
+    <!-- Notifications settings -->
+    <string name="notif_enable">Enable Notifications</string>
+    <string name="notif_alerts">Screenshot Alerts</string>
+    <string name="notif_received">Screenshot Received</string>
+    <string name="notif_requested">Screenshot Requested</string>
+    <string name="notif_other">Other Alerts</string>
+    <string name="notif_online">Child Comes Online</string>
+    <string name="notif_offline">Child Goes Offline</string>
+    <string name="notif_perms">Permissions Changed</string>
+
+    <!-- Profile -->
+    <string name="profile_edit">Edit Profile</string>
+    <string name="profile_password">Change Password</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_theme">Theme</string>
+    <string name="profile_delete_account">Delete Account</string>
+
+    <!-- Biometric -->
+    <string name="biometric_lock_title">Biometric Lock</string>
+    <string name="biometric_lock_subtitle">Require fingerprint or face unlock to open Parental Care</string>
+    <string name="biometric_not_available">Biometric Not Available</string>
+    <string name="biometric_not_available_desc">Your device doesn\'t support fingerprint or face authentication, or no biometrics are enrolled.</string>
+
+    <!-- Connected devices -->
+    <string name="devices_title">Connected Devices</string>
+    <string name="devices_add">Add New Device</string>
+</resources>
