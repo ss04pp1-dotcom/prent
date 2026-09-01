@@ -39,6 +39,7 @@ class PairingRepository @Inject constructor(
         parentDisplayName: String,
         parentEmail: String,
         parentPublicKey: String,
+        parentEncryptionPublicKey: String? = null,
     ): Result<PairingToken> = resultOf {
         val uid = supabase.auth.currentUserOrNull()?.id ?: throw IllegalStateException("not authenticated")
         
@@ -48,6 +49,7 @@ class PairingRepository @Inject constructor(
             parentDisplayName = parentDisplayName,
             parentEmail = parentEmail,
             parentPublicKey = parentPublicKey,
+            parentEncryptionPublicKey = parentEncryptionPublicKey,
         )
         
         val dbToken = token.copy(opaque = factory.hashKey(token))

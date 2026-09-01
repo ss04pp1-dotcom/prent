@@ -1,5 +1,6 @@
 package com.parentalcare.core.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -16,18 +17,18 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class ScreenshotRequestDoc(
-    val requestId: String,
-    val familyId: String,
-    val parentUserId: String,
-    val childDeviceId: String,
-    val createdAt: Long = System.currentTimeMillis(),
-    val expiresAt: Long,
-    val nonce: String,
-    val status: String = "REQUESTED",
-    val delaySeconds: Int = 0,
-    val completedAt: Long? = null,
-    val failureReason: String? = null,
-    val cancellationReason: String? = null,
+    @SerialName("id") val requestId: String,
+    @SerialName("family_id") val familyId: String,
+    @SerialName("parent_user_id") val parentUserId: String,
+    @SerialName("child_device_id") val childDeviceId: String,
+    @SerialName("created_at") val createdAt: Long? = null,
+    @SerialName("expires_at") val expiresAt: Long,
+    @SerialName("nonce") val nonce: String,
+    @SerialName("status") val status: String = "REQUESTED",
+    @SerialName("delay_seconds") val delaySeconds: Int = 0,
+    @SerialName("completed_at") val completedAt: Long? = null,
+    @SerialName("failure_reason") val failureReason: String? = null,
+    @SerialName("cancellation_reason") val cancellationReason: String? = null,
 ) {
     /**
      * True once the request's expiry has passed. Used by the child app
@@ -47,26 +48,26 @@ data class ScreenshotRequestDoc(
  */
 @Serializable
 data class ScreenshotDoc(
-    val screenshotId: String,
-    val familyId: String,
-    val parentUserId: String,
-    val childDeviceId: String,
-    val requestId: String,
-    val storagePath: String,
+    @SerialName("id") val screenshotId: String,
+    @SerialName("family_id") val familyId: String,
+    @SerialName("parent_user_id") val parentUserId: String,
+    @SerialName("child_device_id") val childDeviceId: String,
+    @SerialName("request_id") val requestId: String,
+    @SerialName("storage_path") val storagePath: String,
     /** Base64 IV used by AES-GCM (transported alongside ciphertext). */
-    val iv: String,
+    @SerialName("iv") val iv: String,
     /** Wrapped content key — base64("iv:ciphertext") produced by KeystoreManager.wrap(). */
-    val wrappedKey: String,
-    val thumbnailBase64: String? = null,
-    val mimeType: String = "image/jpeg",
-    val widthPx: Int = 0,
-    val heightPx: Int = 0,
-    val sizeBytes: Long = 0L,
-    val capturedAt: Long = System.currentTimeMillis(),
-    val deliveredAt: Long? = null,
-    val viewedAt: Long? = null,
-    val deletedAt: Long? = null,
-    val retentionExpiresAt: Long,
-    val isUnread: Boolean = true,
-    val encryptedPayloadBase64: String? = null,
+    @SerialName("wrapped_key") val wrappedKey: String,
+    @SerialName("thumbnail_base64") val thumbnailBase64: String? = null,
+    @SerialName("mime_type") val mimeType: String = "image/jpeg",
+    @SerialName("width_px") val widthPx: Int = 0,
+    @SerialName("height_px") val heightPx: Int = 0,
+    @SerialName("size_bytes") val sizeBytes: Long = 0L,
+    @SerialName("captured_at") val capturedAt: Long? = null,
+    @SerialName("delivered_at") val deliveredAt: Long? = null,
+    @SerialName("viewed_at") val viewedAt: Long? = null,
+    @SerialName("deleted_at") val deletedAt: Long? = null,
+    @SerialName("retention_expires_at") val retentionExpiresAt: Long,
+    @SerialName("is_unread") val isUnread: Boolean = true,
+    @SerialName("encrypted_payload_base64") val encryptedPayloadBase64: String? = null,
 )

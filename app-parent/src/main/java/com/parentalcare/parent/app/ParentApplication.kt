@@ -10,7 +10,20 @@ import com.google.firebase.FirebaseApp
 class ParentApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        FirebaseApp.initializeApp(this)
+        
+        try {
+            val options = com.google.firebase.FirebaseOptions.Builder()
+                .setProjectId(getString(com.parentalcare.parent.R.string.firebase_project_id))
+                .setApplicationId(getString(com.parentalcare.parent.R.string.firebase_application_id))
+                .setApiKey(getString(com.parentalcare.parent.R.string.firebase_api_key))
+                .setGcmSenderId(getString(com.parentalcare.parent.R.string.firebase_sender_id))
+                .setStorageBucket(getString(com.parentalcare.parent.R.string.firebase_storage_bucket))
+                .build()
+            FirebaseApp.initializeApp(this, options)
+        } catch (e: Exception) {
+            Timber.e(e, "Firebase init failed")
+        }
+
         if (com.parentalcare.parent.BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }

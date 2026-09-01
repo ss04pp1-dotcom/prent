@@ -30,7 +30,20 @@ class ChildApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        FirebaseApp.initializeApp(this)
+        
+        try {
+            val options = com.google.firebase.FirebaseOptions.Builder()
+                .setProjectId(getString(com.parentalcare.child.R.string.firebase_project_id))
+                .setApplicationId(getString(com.parentalcare.child.R.string.firebase_application_id))
+                .setApiKey(getString(com.parentalcare.child.R.string.firebase_api_key))
+                .setGcmSenderId(getString(com.parentalcare.child.R.string.firebase_sender_id))
+                .setStorageBucket(getString(com.parentalcare.child.R.string.firebase_storage_bucket))
+                .build()
+            FirebaseApp.initializeApp(this, options)
+        } catch (e: Exception) {
+            Timber.e(e, "Firebase init failed")
+        }
+
         if (com.parentalcare.child.BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }

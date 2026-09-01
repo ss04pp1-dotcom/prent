@@ -174,3 +174,6 @@ See `docs/SECURITY.md` for the full threat model, test matrix, and forbidden beh
 ## License
 
 Proprietary — © 2024 Parental Care. All rights reserved.
+-e 
+## Firebase Setup
+To set up Firebase locally, copy `firebase_config.xml.template` to `app-parent/src/main/res/values/firebase_config.xml` and `app-child/src/main/res/values/firebase_config.xml`, then replace the placeholders with your actual Firebase config values from `google-services.json`.

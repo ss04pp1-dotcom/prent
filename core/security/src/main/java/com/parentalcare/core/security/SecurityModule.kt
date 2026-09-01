@@ -1,5 +1,6 @@
 package com.parentalcare.core.security
 
+import com.parentalcare.core.security.crypto.KeyExchangeManager
 import com.parentalcare.core.security.crypto.ScreenshotEncryptor
 import com.parentalcare.core.security.keystore.KeystoreManager
 import com.parentalcare.core.security.pairing.PairingTokenFactory
@@ -18,10 +19,14 @@ object SecurityModule {
     @Provides @Singleton
     fun provideKeystoreManager(@ApplicationContext ctx: android.content.Context): KeystoreManager =
         KeystoreManager(ctx)
+        
+    @Provides @Singleton
+    fun provideKeyExchangeManager(): KeyExchangeManager =
+        KeyExchangeManager()
 
     @Provides @Singleton
-    fun provideEncryptor(ks: KeystoreManager): ScreenshotEncryptor =
-        ScreenshotEncryptor(ks)
+    fun provideEncryptor(ks: KeystoreManager, keyExchange: KeyExchangeManager): ScreenshotEncryptor =
+        ScreenshotEncryptor(ks, keyExchange)
 
     @Provides @Singleton
     fun providePairingFactory(): PairingTokenFactory = PairingTokenFactory()

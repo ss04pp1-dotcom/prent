@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec
 
 class ScreenshotEncryptor(
     private val keystore: KeystoreManager,
+    private val keyExchange: KeyExchangeManager,
 ) {
     /**
      * Child side: Encrypts screenshot bytes and wraps the AES key with Parent's RSA public key.
@@ -22,11 +23,11 @@ class ScreenshotEncryptor(
         }
         val ciphertext = cipher.doFinal(plaintext)
 
-        val wrapped = keystore.wrapByChild(contentKey, parentPublicKeyBase64)
+        val wrapped = keyExchange.wrapByChild(contentKey, parentPublicKeyBase64)
 
         return EncryptedPayload(
             iv = Base64.encodeToString(iv, BASE64_FLAGS),
-            wrappedKey = wrapped,
+            wrappedKey = "RSA1:$wrapped",
             ciphertext = Base64.encodeToString(ciphertext, BASE64_FLAGS),
         )
     }
@@ -35,7 +36,7 @@ class ScreenshotEncryptor(
      * Parent side: Decrypts using payload containing base64 ciphertext (tests mostly).
      */
     fun decrypt(payload: EncryptedPayload): ByteArray {
-        val contentKey = keystore.unwrapByParent(payload.wrappedKey)
+        val contentKey = unwrapKey(payload.wrappedKey)
         val iv = Base64.decode(payload.iv, BASE64_FLAGS)
         val ciphertext = Base64.decode(payload.ciphertext, BASE64_FLAGS)
 
@@ -49,13 +50,23 @@ class ScreenshotEncryptor(
      * Parent side: Decrypts using the actual downloaded encrypted content from Storage.
      */
     fun decryptWithContent(payload: EncryptedPayload, encryptedContent: ByteArray): ByteArray {
-        val contentKey = keystore.unwrapByParent(payload.wrappedKey)
+        val contentKey = unwrapKey(payload.wrappedKey)
         val iv = Base64.decode(payload.iv, BASE64_FLAGS)
 
         val cipher = Cipher.getInstance(TRANSFORM).apply {
             init(Cipher.DECRYPT_MODE, SecretKeySpec(contentKey, "AES"), GCMParameterSpec(GCM_TAG_BITS, iv))
         }
         return cipher.doFinal(encryptedContent)
+    }
+
+    private fun unwrapKey(wrappedKeyString: String): ByteArray {
+        return if (wrappedKeyString.startsWith("RSA1:")) {
+            val actualWrappedKey = wrappedKeyString.removePrefix("RSA1:")
+            keyExchange.unwrapByParent(actualWrappedKey)
+        } else {
+            // Fallback to legacy KeystoreManager which might use symmetric wrapping
+            keystore.unwrapByParent(wrappedKeyString)
+        }
     }
 
     private companion object {

@@ -105,7 +105,7 @@ class ScreenshotAccessibilityService : AccessibilityService() {
                             }
 
                             override fun onFailure(errorCode: Int) {
-                                Timber.e("Accessibility screenshot failed with error code: $errorCode")
+                                Timber.e("Accessibility screenshot failed with error code: %d", errorCode)
                                 if (cont.isActive) cont.resume(null)
                             }
                         }

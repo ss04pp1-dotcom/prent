@@ -1,23 +1,25 @@
 package com.parentalcare.core.security.pairing
 
 import com.parentalcare.core.common.util.SecureTokenGenerator
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.security.MessageDigest
 
 @Serializable
 data class PairingToken(
-    val tokenId: String,
-    val opaque: String,
-    val familyId: String,
-    val parentUserId: String,
-    val parentDisplayName: String,
-    val parentEmail: String,
-    val parentPublicKey: String,
-    val createdAt: Long,
-    val expiresAt: Long,
-    val nonce: String,
-    val isConsumed: Boolean = false,
-    val consumedByDeviceId: String? = null,
+    @SerialName("token_id") val tokenId: String,
+    @SerialName("opaque") val opaque: String,
+    @SerialName("family_id") val familyId: String,
+    @SerialName("parent_user_id") val parentUserId: String,
+    @SerialName("parent_display_name") val parentDisplayName: String,
+    @SerialName("parent_email") val parentEmail: String,
+    @SerialName("parent_public_key") val parentPublicKey: String? = null,
+    @SerialName("parent_encryption_public_key") val parentEncryptionPublicKey: String? = null,
+    @SerialName("created_at") val createdAt: Long,
+    @SerialName("expires_at") val expiresAt: Long,
+    @SerialName("nonce") val nonce: String,
+    @SerialName("is_consumed") val isConsumed: Boolean = false,
+    @SerialName("consumed_by_device_id") val consumedByDeviceId: String? = null,
 ) {
     val isExpired: Boolean get() = System.currentTimeMillis() > expiresAt
 
@@ -43,7 +45,8 @@ class PairingTokenFactory {
         parentUserId: String,
         parentDisplayName: String,
         parentEmail: String,
-        parentPublicKey: String,
+        parentPublicKey: String? = null,
+        parentEncryptionPublicKey: String? = null,
         ttlSeconds: Long = 120,
         now: Long = System.currentTimeMillis(),
     ): PairingToken {
@@ -58,6 +61,7 @@ class PairingTokenFactory {
             parentDisplayName = parentDisplayName,
             parentEmail = parentEmail,
             parentPublicKey = parentPublicKey,
+            parentEncryptionPublicKey = parentEncryptionPublicKey,
             createdAt = now,
             expiresAt = now + ttlSeconds * 1000,
             nonce = nonce,
