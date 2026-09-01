@@ -47,7 +47,7 @@ class FamilyRepository @Inject constructor(
             supabase.postgrest[usersTable].update(
                 mapOf(SupabasePaths.Columns.FAMILY_ID to familyId)
             ) {
-                filter { eq(SupabasePaths.Columns.USER_ID, uid) }
+                filter { eq(SupabasePaths.Columns.ID, uid) }
             }
         } catch (e: Exception) {
             Timber.tag(TAG).w("Failed to update user with familyId: %s", Redactor.redact(e.message))

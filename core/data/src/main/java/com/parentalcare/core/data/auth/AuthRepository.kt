@@ -70,7 +70,7 @@ class AuthRepository @Inject constructor(
         val uid = user.id
 
         val userDoc = supabase.postgrest[usersTable]
-            .select { filter { eq(SupabasePaths.Columns.USER_ID, uid) } }
+            .select { filter { eq(SupabasePaths.Columns.ID, uid) } }
             .decodeSingleOrNull<UserDoc>()
             ?: UserDoc(userId = uid, email = email, displayName = email, role = "PARENT")
 
@@ -101,7 +101,7 @@ class AuthRepository @Inject constructor(
         val displayName = user.userMetadata?.get("full_name")?.toString()?.removeSurrounding("\"") ?: email
 
         var userDoc = supabase.postgrest[usersTable]
-            .select { filter { eq(SupabasePaths.Columns.USER_ID, uid) } }
+            .select { filter { eq(SupabasePaths.Columns.ID, uid) } }
             .decodeSingleOrNull<UserDoc>()
 
         if (userDoc == null) {
